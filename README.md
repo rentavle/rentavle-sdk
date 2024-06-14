@@ -6,9 +6,10 @@ NOTE: You can use this SDK in both Typesript and Javascript (CJS, MJS compatible
 
 ## Table of Contents
 
-- [Installation](https://www.notion.so/SDK-0e1f1b483964462f8df7c9ed95220b56?pvs=21)
-- [Configuration](https://www.notion.so/SDK-0e1f1b483964462f8df7c9ed95220b56?pvs=21)
-- [Getting Started](https://www.notion.so/SDK-0e1f1b483964462f8df7c9ed95220b56?pvs=21)
+- Installation
+- Configuration
+- Getting Started
+- Example code for all functions
 
 ## Installation
 
