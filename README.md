@@ -2,6 +2,8 @@
 
 Welcome to the Rentavle SDK! This guide covers everything you need to start using the Rentavle SDK in your projects.
 
+NOTE: You can use this SDK in both Typesript and Javascript (CJS, MJS compatible)
+
 ## Table of Contents
 
 - [Installation](https://www.notion.so/SDK-0e1f1b483964462f8df7c9ed95220b56?pvs=21)
