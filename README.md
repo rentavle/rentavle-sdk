@@ -2,13 +2,14 @@
 
 Welcome to the Rentavle SDK! This guide covers everything you need to start using the Rentavle SDK in your projects.
 
-NOTE: You can use this SDK in both Typesript and Javascript (CJS, MJS compatible)
+NOTE: You can use this SDK in both TypeScript and JavaScript (CJS, MJS compatible)
 
 ## Table of Contents
 
 - Installation
 - Configuration
 - Getting Started
+- Understanding the Cursor Parameter
 - Example code for all functions
 
 ## Installation
@@ -17,47 +18,114 @@ To start using the Rentavle SDK, you first need to install the package via npm:
 
 ```bash
 npm install rentavle-sdk
-
 ```
 
-## **Configuration**
+## Configuration
 
 Before you can interact with the Rentavle APIs, you need to setup your SDK with the necessary configuration:
 
-```jsx
+```javascript
 import { RentavleSDK } from "rentavle-sdk";
 
 const sdk = new RentavleSDK({
     apiEndpoint: "https://www.rentavle.com/bapi",
     chainId: "0x100"
 });
-
 ```
 
-Here, ﻿apiEndpoint is the URL of the Rentavle API, and ﻿chainId is the ID of the blockchain you are interacting with.
+Here, apiEndpoint is the URL of the Rentavle API, and chainId is the ID of the blockchain you are interacting with.
 
 ## Getting Started
 
 ### getRentavleContractDetail
 
-```jsx
+```javascript
 async function getRentavleContractDetail() {
     try {
         const response = await sdk.getRentavleContractDetail("cxfdbfc5b5b330df8481e17f6872d985ade4986ee8");
         console.log('Response:', response);
     } catch (error) {
-ae        console.error('Error fetching contract details:', error);
+        console.error('Error fetching contract details:', error);
     }
 }
 
 getRentavleContractDetail();
-
 ```
+
+## Understanding the Cursor Parameter
+
+The `cursor` parameter is used for pagination in the API responses. It helps in retrieving large sets of data in smaller, manageable chunks.
+
+### How it works:
+
+1. When you make an initial request, leave the cursor empty or omit it.
+2. The API response will include a `cursor` value if there are more results available.
+3. To fetch the next set of results, use this `cursor` value in your subsequent request.
+4. Repeat this process until you receive an empty `cursor`, indicating you've reached the end of the data set.
+
+### Example usage with cursor pagination:
+
+```javascript
+async function getAllNFTsByContract(sdk, contractAddress, size = 10) {
+    let allNFTs = [];
+    let cursor = "";
+
+    while (true) {
+        try {
+            // Make the API call
+            const response = await sdk.getListOfNFTsByContract(contractAddress, size, cursor);
+            
+            // Extract the NFTs from the response
+            const nfts = [...(response.chainItems || []), ...(response.rentavleItems || [])];
+            allNFTs = allNFTs.concat(nfts);
+
+            // Get the new cursor
+            cursor = response.cursor || "";
+
+            // If there's no cursor, we've reached the end of the data
+            if (!cursor) {
+                break;
+            }
+        } catch (error) {
+            console.error('Error fetching NFTs:', error);
+            break;
+        }
+    }
+
+    return allNFTs;
+}
+
+// Usage
+const sdk = new RentavleSDK({
+    apiEndpoint: "https://www.rentavle.com/bapi",
+    chainId: "0x100"
+});
+const contractAddress = 'cxfdbfc5b5b330df8481e17f6872d985ade4986ee8';
+
+getAllNFTsByContract(sdk, contractAddress)
+    .then(allNFTs => {
+        console.log(`Total NFTs retrieved: ${allNFTs.length}`);
+    })
+    .catch(error => {
+        console.error('Failed to retrieve NFTs:', error);
+    });
+```
+
+In this example:
+
+1. We define an async function `getAllNFTsByContract` that handles the pagination logic.
+2. It starts with an empty cursor and makes repeated API calls.
+3. In each iteration, it extracts the NFTs from both `chainItems` and `rentavleItems`.
+4. It then gets the new cursor from the response.
+5. The process continues until an empty cursor is received, indicating the end of the data.
+6. Finally, it returns all collected NFTs.
+
+This approach allows you to efficiently retrieve all NFTs for a contract, regardless of the total number, by making multiple smaller requests and following the cursor pagination.
 
 ## Example code for all functions
 
-```jsx
-import { RentavleSDK } from '../rentavle';
+```javascript
+import { RentavleSDK } from 'rentavle-sdk';
 
 async function exampleUsage() {
   const sdk = new RentavleSDK({
@@ -103,5 +171,4 @@ async function exampleUsage() {
 }
 
 exampleUsage();
-
 ```
