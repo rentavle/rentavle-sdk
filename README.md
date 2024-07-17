@@ -11,6 +11,7 @@ NOTE: You can use this SDK in both TypeScript and JavaScript (CJS, MJS compatibl
 - Getting Started
 - Understanding the Cursor Parameter
 - Example code for all functions
+- Terms explanation
 
 ## Installation
 
@@ -172,3 +173,12 @@ async function exampleUsage() {
 
 exampleUsage();
 ```
+## Terms Explanation
+
+1. rentavleItems: These are items that are rented or borrowed through Rentavle. When you fetch a list of NFTs for a specific contract, rentavleItems will include NFTs that are currently being rented or are available for rent through the Rentavle platform.
+
+2. havahItems: These are items that exist on the Havah chain. When fetching a list of NFTs for a specific contract, havahItems will return all NFTs on the Havah chain for that contract, regardless of whether they are involved in Rentavle transactions or not.
+
+For example, when you use the `getListOfNFTsByContract` function:
+- rentavleItems will contain NFTs that are part of the Rentavle ecosystem (rented, available for rent, etc.)
+- havahItems will contain all NFTs for that contract on the Havah chain, providing a complete view of the contract's NFTs.
